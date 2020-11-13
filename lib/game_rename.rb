@@ -2,6 +2,7 @@
 # frozen_string_literal: false
 
 require 'optparse'
+require 'pp'
 
 # Shorten this and renable linter check
 def parse_command
@@ -25,7 +26,7 @@ class SideCarFile
 
   def initialize(path)
     @path = path
-    @contents = ''
+    @contents = []
     read_contents
     print_contents
   end
@@ -38,13 +39,14 @@ class SideCarFile
   end
 
   def print_contents
-    puts @contents
+    p @path
+    p @contents
   end
 end
 
 # The directory in which the source files are contained
 class GameDir
-  attr_reader :image_filepath_collections, :sidecar_filepath_collections
+  attr_reader :image_filepath_collections, :sidecar_filepath_collections, :sidecar_file_collections
 
   def initialize(path)
     @path = path
@@ -56,7 +58,8 @@ class GameDir
 
   def find_filepaths_by_extension(*args)
     filepaths = {}
-    args.each { |arg| filepaths[arg] = get_files_by_type(arg) }
+    # Check Ruby caches calls like this
+    args.each { |arg| filepaths[arg] = get_files_by_type(arg) unless get_files_by_type(arg).empty? }
     filepaths
   end
 
@@ -66,7 +69,7 @@ class GameDir
 
   def load_sidecar_files
     @sidecar_filepath_collections.each do |extension, filepath_collection|
-      @sidecar_file_collections[extension] = [] unless @sidecar_file_collections.key?(extension)
+      @sidecar_file_collections[extension] = []
       filepath_collection.each do |filepath|
         @sidecar_file_collections[extension].append(SideCarFile.new(filepath))
       end
@@ -81,13 +84,15 @@ end
 
 options = parse_command
 
-p options[:input_dir]
+# p options[:input_dir]
 
 if options[:input_dir]
   game_dir = GameDir.new(options[:input_dir])
+  puts '*******************'
+  pp game_dir.sidecar_file_collections
   puts game_dir.image_filepath_collections
-  puts game_dir.sidecar_filepath_collections
-  game_dir.process_gdi_set
+  # puts game_dir.sidecar_filepath_collections
+  # game_dir.process_gdi_set
 end
 
 # Sense checks
