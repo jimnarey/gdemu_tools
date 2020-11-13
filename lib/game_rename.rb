@@ -26,18 +26,19 @@ class SideCarFile
   def initialize(path)
     @path = path
     @contents = ''
-    line_by_line
+    read_contents
+    print_contents
   end
 
   def read_contents
     @contents = File.read(@path).split
-    # file = File.open(@path)
-    # @contents = file.readlines.map(&:chomp)
-    # file.close
+    file = File.open(@path)
+    @contents = file.readlines.map(&:chomp)
+    file.close
   end
 
-  def line_by_line
-    File.foreach(@path) { |line| puts line }
+  def print_contents
+    puts @contents
   end
 end
 
@@ -72,16 +73,10 @@ class GameDir
     end
   end
 
-# This will only store the last file of each type - make each hash item an array
-#   def load_sidecar_files
-#     @sidecar_filepaths.each do |extension, paths|
-#       if path != ''
-#         puts 'Is run'
-#         @sidecar_files[extension] = SideCarFile.new(path)
-#         @sidecar_files[extension].line_by_line
-#       end
-#     end
-#   end
+  def process_gdi_set
+    gdi_contents = @sidecar_file_collections['gdi'][0].contents
+    puts gdi_contents
+  end
 end
 
 options = parse_command
@@ -92,6 +87,7 @@ if options[:input_dir]
   game_dir = GameDir.new(options[:input_dir])
   puts game_dir.image_filepath_collections
   puts game_dir.sidecar_filepath_collections
+  game_dir.process_gdi_set
 end
 
 # Sense checks
