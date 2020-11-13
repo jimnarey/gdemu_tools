@@ -1,7 +1,7 @@
 # frozen_string_literal: false
 
-def try_func(number)
-  number + 3
+def try_func(*args)
+  args.each { |arg| puts arg }
 end
 
-try_func(2)
+try_func('one', 'two', 'three')

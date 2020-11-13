@@ -19,51 +19,58 @@ def parse_command
   options
 end
 
-# The directory in which the source files are contained
-class GameDir
-  attr_reader :image_files
+# Text-based sidecar file, describing image contents
+class SideCarFile
+  attr_reader :contents
 
   def initialize(path)
     @path = path
-    @image_files = find_image_files
-    # puts @game_files
+    @contents = ''
   end
 
-  def find_image_files
-    {
-      gdi: get_files_by_type('gdi'),
-      cdi: get_files_by_type('cdi'),
-      bin: get_files_by_type('bin'),
-      ccd: get_files_by_type('ccd'),
-      img: get_files_by_type('img'),
-      sub: get_files_by_type('sub'),
-      mds: get_files_by_type('mds'),
-      mdf: get_files_by_type('mdf'),
-      iso: get_files_by_type('iso')
-    }
+  def read_contents
+    @contents = File.read(@path).split
+    # file = File.open(@path)
+    # @contents = file.readlines.map(&:chomp)
+    # file.close
+  end
+
+  def line_by_line
+    File.foreach(@path) { |line| puts line }
+  end
+end
+
+# The directory in which the source files are contained
+class GameDir
+  attr_reader :image_filepaths, :sidecar_filepaths
+
+  def initialize(path)
+    @path = path
+    @image_filepaths = find_filepaths_by_extension('bin', 'img', 'sub', 'mdf', 'iso')
+    @sidecar_filepaths = find_filepaths_by_extension('gdi', 'cdi', 'ccd', 'mds')
+    @sidecar_files = {}
+  end
+
+  def find_filepaths_by_extension(*args)
+    filepaths = {}
+    args.each { |arg| filepaths[arg] = get_files_by_type(arg) }
+    filepaths
   end
 
   def get_files_by_type(extension)
     Dir.glob("#{@path}/*.#{extension}", File::FNM_CASEFOLD)
   end
-end
 
-def get_input_files(input_dir)
-  Dir.entries(input_dir).select { |f| File.file? File.join(input_dir, f) }
-end
-
-def get_file_paths(directory, files)
-  file_paths = []
-  files.each do |file|
-    file_paths.append(File.join(directory, file))
-  end
-  file_paths
-end
-
-def print_array(input_array)
-  input_array.each do |item|
-    puts item
-  end
+# This will only store the last file of each type - make each hash item an array
+#   def load_sidecar_files
+#     @sidecar_filepaths.each do |extension, paths|
+#       if path != ''
+#         puts 'Is run'
+#         @sidecar_files[extension] = SideCarFile.new(path)
+#         @sidecar_files[extension].line_by_line
+#       end
+#     end
+#   end
 end
 
 options = parse_command
@@ -72,5 +79,15 @@ p options[:input_dir]
 
 if options[:input_dir]
   game_dir = GameDir.new(options[:input_dir])
-  puts game_dir.image_files
+  puts game_dir.image_filepaths
+  puts game_dir.sidecar_filepaths
 end
+
+# Sense checks
+#   That GDIs are not really CDIs
+#   Files referred to in sidecars are present
+#   Unsupported files are not used
+#   Whether there are other files or directories
+#   Proper filetype check?
+#   Sidecar filenames match real filenames
+#   More than one of same sidecar type
