@@ -23,8 +23,32 @@ end
 class GameDir
   def initialize(path)
     @path = path
-    @gdi = get_files_by_type('gdi')
-    puts @gdi
+    # @gdi = get_files_by_type('gdi')
+    # @cdi = get_files_by_type('cdi')
+    # @bin = get_files_by_type('bin')
+    # @ccd = get_files_by_type('ccd')
+    # @img = get_files_by_type('img')
+    # @sub = get_files_by_type('sub')
+    # @mds = get_files_by_type('mds')
+    # @mdf = get_files_by_type('mdf')
+    # @iso = get_files_by_type('iso')
+    @game_files = find_game_files
+    # puts @gdi
+    puts @game_files
+  end
+
+  def find_game_files
+    {
+      gdi: get_files_by_type('gdi'),
+      cdi: get_files_by_type('cdi'),
+      bin: get_files_by_type('bin'),
+      ccd: get_files_by_type('ccd'),
+      img: get_files_by_type('img'),
+      sub: get_files_by_type('sub'),
+      mds: get_files_by_type('mds'),
+      mdf: get_files_by_type('mdf'),
+      iso: get_files_by_type('iso')
+    }
   end
 
   def get_files_by_type(extension)
