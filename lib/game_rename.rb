@@ -21,23 +21,15 @@ end
 
 # The directory in which the source files are contained
 class GameDir
+  attr_reader :image_files
+
   def initialize(path)
     @path = path
-    # @gdi = get_files_by_type('gdi')
-    # @cdi = get_files_by_type('cdi')
-    # @bin = get_files_by_type('bin')
-    # @ccd = get_files_by_type('ccd')
-    # @img = get_files_by_type('img')
-    # @sub = get_files_by_type('sub')
-    # @mds = get_files_by_type('mds')
-    # @mdf = get_files_by_type('mdf')
-    # @iso = get_files_by_type('iso')
-    @game_files = find_game_files
-    # puts @gdi
-    puts @game_files
+    @image_files = find_image_files
+    # puts @game_files
   end
 
-  def find_game_files
+  def find_image_files
     {
       gdi: get_files_by_type('gdi'),
       cdi: get_files_by_type('cdi'),
@@ -68,10 +60,6 @@ def get_file_paths(directory, files)
   file_paths
 end
 
-# def sort_files(filepaths)
-#   file_collection = {}
-# end
-
 def print_array(input_array)
   input_array.each do |item|
     puts item
@@ -83,8 +71,6 @@ options = parse_command
 p options[:input_dir]
 
 if options[:input_dir]
-  # files = get_input_files(options[:input_dir])
-  # file_paths = get_file_paths(options[:input_dir], files)
-  # print_array(file_paths)
-  GameDir.new(options[:input_dir])
+  game_dir = GameDir.new(options[:input_dir])
+  puts game_dir.image_files
 end
