@@ -3,6 +3,7 @@
 
 require 'optparse'
 require 'pp'
+require_relative 'game_source_dir'
 
 # Shorten this and renable linter check
 def parse_command
@@ -20,77 +21,12 @@ def parse_command
   options
 end
 
-# Text-based sidecar file, describing image contents
-class SideCarFile
-  attr_reader :contents
-
-  def initialize(path)
-    @path = path
-    @contents = []
-    read_contents
-    print_contents
-  end
-
-  def read_contents
-    @contents = File.read(@path).split
-    file = File.open(@path)
-    @contents = file.readlines.map(&:chomp)
-    file.close
-  end
-
-  def print_contents
-    p @path
-    p @contents
-  end
-end
-
-# The directory in which the source files are contained
-class GameDir
-  attr_reader :image_filepath_collections, :sidecar_filepath_collections, :sidecar_file_collections
-
-  def initialize(path)
-    @path = path
-    @image_filepath_collections = find_filepaths_by_extension('bin', 'img', 'sub', 'mdf', 'iso')
-    @sidecar_filepath_collections = find_filepaths_by_extension('gdi', 'cue', 'cdi', 'ccd', 'mds')
-    @sidecar_file_collections = {}
-    load_sidecar_files
-  end
-
-  def find_filepaths_by_extension(*args)
-    filepaths = {}
-    # Check Ruby caches calls like this
-    args.each { |arg| filepaths[arg] = get_files_by_type(arg) unless get_files_by_type(arg).empty? }
-    filepaths
-  end
-
-  def get_files_by_type(extension)
-    Dir.glob("#{@path}/*.#{extension}", File::FNM_CASEFOLD)
-  end
-
-  def load_sidecar_files
-    @sidecar_filepath_collections.each do |extension, filepath_collection|
-      @sidecar_file_collections[extension] = []
-      filepath_collection.each do |filepath|
-        @sidecar_file_collections[extension].append(SideCarFile.new(filepath))
-      end
-    end
-  end
-
-  def process_gdi_set
-    gdi_contents = @sidecar_file_collections['gdi'][0].contents
-    puts gdi_contents
-  end
-end
-
 options = parse_command
 
-# p options[:input_dir]
-
 if options[:input_dir]
-  game_dir = GameDir.new(options[:input_dir])
-  puts '*******************'
+  game_dir = GameSourceDir.new(options[:input_dir])
   pp game_dir.sidecar_file_collections
-  puts game_dir.image_filepath_collections
+  pp game_dir.image_filepath_collections
   # puts game_dir.sidecar_filepath_collections
   # game_dir.process_gdi_set
 end
@@ -103,3 +39,12 @@ end
 #   Proper filetype check?
 #   Sidecar filenames match real filenames
 #   More than one of same sidecar type
+
+# CCD/IMG/SUB
+# CCD, CloneCD Control File, needs an IMG file, GNU ccd2cue cue sheet, ccd2iso (Linux) to iso, supports mixed mode
+# SUB, subchannel file
+# MFD/MDS
+# MDF, Alcohol 120% image, multi-layer, mixed mode
+# MDS, inc layer break and layer breach bit
+# CUE/BIN (& GDI/BIN)
+# CUE, https://en.wikipedia.org/wiki/Cue_sheet_(computing)
