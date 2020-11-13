@@ -17,16 +17,15 @@ def parse_command(options)
   end.parse!
 end
 
-# Now we can use the options hash however we like.
-# puts "Input dir is #{options[:input_dir]}" if options[:input_dir]
+def get_input_files(input_dir)
+  files = Dir.entries(input_dir).select { |f| File.file? File.join(input_dir, f) }
+  # p files
+  files.each do |file|
+    puts File.join(input_dir, file)
+  end
+end
 
 options = {}
 parse_command(options)
 
-if options[:input_dir]
-  files = Dir.entries(options[:input_dir]).select { |f| File.file? File.join(options[:input_dir], f) }
-  p files
-  files.each do |file|
-    puts File.join(options[:input_dir], file)
-  end
-end
+get_input_files(options[:input_dir]) if options[:input_dir]
