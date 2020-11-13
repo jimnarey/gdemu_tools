@@ -26,6 +26,7 @@ class SideCarFile
   def initialize(path)
     @path = path
     @contents = ''
+    line_by_line
   end
 
   def read_contents
@@ -42,13 +43,14 @@ end
 
 # The directory in which the source files are contained
 class GameDir
-  attr_reader :image_filepaths, :sidecar_filepaths
+  attr_reader :image_filepath_collections, :sidecar_filepath_collections
 
   def initialize(path)
     @path = path
-    @image_filepaths = find_filepaths_by_extension('bin', 'img', 'sub', 'mdf', 'iso')
-    @sidecar_filepaths = find_filepaths_by_extension('gdi', 'cdi', 'ccd', 'mds')
-    @sidecar_files = {}
+    @image_filepath_collections = find_filepaths_by_extension('bin', 'img', 'sub', 'mdf', 'iso')
+    @sidecar_filepath_collections = find_filepaths_by_extension('gdi', 'cue', 'cdi', 'ccd', 'mds')
+    @sidecar_file_collections = {}
+    load_sidecar_files
   end
 
   def find_filepaths_by_extension(*args)
@@ -59,6 +61,15 @@ class GameDir
 
   def get_files_by_type(extension)
     Dir.glob("#{@path}/*.#{extension}", File::FNM_CASEFOLD)
+  end
+
+  def load_sidecar_files
+    @sidecar_filepath_collections.each do |extension, filepath_collection|
+      @sidecar_file_collections[extension] = [] unless @sidecar_file_collections.key?(extension)
+      filepath_collection.each do |filepath|
+        @sidecar_file_collections[extension].append(SideCarFile.new(filepath))
+      end
+    end
   end
 
 # This will only store the last file of each type - make each hash item an array
@@ -79,8 +90,8 @@ p options[:input_dir]
 
 if options[:input_dir]
   game_dir = GameDir.new(options[:input_dir])
-  puts game_dir.image_filepaths
-  puts game_dir.sidecar_filepaths
+  puts game_dir.image_filepath_collections
+  puts game_dir.sidecar_filepath_collections
 end
 
 # Sense checks
