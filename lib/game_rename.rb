@@ -25,8 +25,8 @@ options = parse_command
 
 if options[:input_dir]
   game_dir = GameSourceDir.new(options[:input_dir])
-  pp game_dir.sidecar_file_collections
-  pp game_dir.image_filepath_collections
+  # pp game_dir.sidecar_file_collections
+  # pp game_dir.image_filepath_collections
   # puts game_dir.sidecar_filepath_collections
   # game_dir.process_gdi_set
 end

@@ -1,5 +1,7 @@
 # frozen_string_literal: false
 
+require_relative 'game_track'
+
 # Text-based sidecar file, describing image contents
 class SideCarFile
   attr_reader :contents
@@ -29,19 +31,6 @@ class SideCarFile
   end
 end
 
-# Class to hold each track in a GDI sidecar file
-class GdiTrack
-  def initialize(track_string)
-    @track_string = track_string
-    @track_number = 0
-    @track_offset = 0
-    @numeric_unknown_a = 0
-    @numeric_unknown_b = 0
-    @track_name = ''
-    @numeric_unknown_c = 0
-  end
-end
-
 # A GDI Sidecar File
 class GdiSideCarFile < SideCarFile
   def initialize(path)
@@ -50,6 +39,10 @@ class GdiSideCarFile < SideCarFile
   end
 
   def populate_tracks
-    @contents.drop(1).each { |track| @tracks.append(track) }
+    @contents.drop(1).each { |track| @tracks.append(GdiTrack.new(track)) }
+  end
+
+  def display_tracks
+    @populate_tracks
   end
 end
