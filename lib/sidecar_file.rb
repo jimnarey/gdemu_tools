@@ -11,7 +11,7 @@ class SideCarFile
     @contents = []
     @tracks = []
     populate_contents
-    # print_contents
+    print_contents
   end
 
   def populate_contents

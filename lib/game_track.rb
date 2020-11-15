@@ -2,6 +2,8 @@
 
 # Class to hold each track in a GDI sidecar file
 class GdiTrack
+  attr_reader :track_name, :track_other
+
   def initialize(track_string)
     @track_string = track_string
     @track_name_open_quote_index = track_string.index('"')
