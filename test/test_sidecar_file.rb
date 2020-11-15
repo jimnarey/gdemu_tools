@@ -3,17 +3,24 @@
 require 'minitest/autorun'
 require_relative '../lib/sidecar_file'
 
-# Try work out what the right path is
-# None of these work
-puts Dir.entries('/home/jimnarey/projects/gdemu_tools/test/fixtures/renaming/
-      gdi_game/Random Game (USA) (En,Ja,Fr,De,Es) (Rev A)/')
 
-puts Dir.entries('./fixtures/renaming/gdi_game/Random Game (USA) (En,Ja,Fr,De,Es) (Rev A)/')
+paths = [
+  '/home/jimnarey/projects/gdemu_tools/test/fixtures/renaming/
+            gdi_game/Random Game (USA) (En,Ja,Fr,De,Es) (Rev A)/',
+  './fixtures/renaming/gdi_game/Random Game (USA) (En,Ja,Fr,De,Es) (Rev A)/', # Not the same as in tryout_paths.rb 
+  './test/fixtures/renaming/gdi_game/Random Game (USA) (En,Ja,Fr,De,Es) (Rev A)/',
+  '/media/sf_G_DRIVE/Dreamcast Games/Sonic Adventure (USA) (En,Ja,Fr,De,Es) (Rev A)/'
+]
 
-puts Dir.entries('./test/fixtures/renaming/gdi_game/Random Game (USA) (En,Ja,Fr,De,Es) (Rev A)/')
+def test_path(path)
+  puts Dir.entries(path)
+  puts format('This path worked: %s', path)
+rescue StandardError => e
+  puts e
+  puts format('This path did not work: %s', path)
+end
 
-# This one works
-puts Dir.entries('/media/sf_G_DRIVE/Dreamcast Games/Sonic Adventure (USA) (En,Ja,Fr,De,Es) (Rev A)/')
+paths.each { |path| test_path(path) }
 
 class TestSideCarFile < Minitest::Test
   def test_populates_contents
