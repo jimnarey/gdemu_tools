@@ -33,10 +33,9 @@ class GameSourceDir
     @sidecar_filepath_collections.each do |extension, filepath_collection|
       puts extension
       if @sidecar_filepath_collections[extension].length > 1
-        puts "More than one sidecar file with #{extension} extension"
-      else
-        @sidecar_files[extension] = provide_sidecar(extension, filepath_collection[0])
+        puts "More than one sidecar file with #{extension} extension, using first found"
       end
+      @sidecar_files[extension] = provide_sidecar(extension, filepath_collection[0]) 
     end
   end
 
