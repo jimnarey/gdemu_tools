@@ -25,9 +25,9 @@ options = parse_command
 
 if options[:input_dir]
   game_dir = GameSourceDir.new(options[:input_dir])
-  # pp game_dir.sidecar_file_collections
   game_dir.gdi_rename
-  # pp game_dir.sidecar_file_collections
+  game_dir.gdi_write
+  game_dir.gdi_names
 end
 
 # Sense checks

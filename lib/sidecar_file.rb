@@ -8,22 +8,21 @@ class SideCarFile
 
   def initialize(path)
     @path = path
-    @contents = []
+    @init_contents = []
+    @new_contents = []
     @tracks = []
     populate_contents
-    # print_contents
   end
 
   def populate_contents
-    @contents = File.read(@path).split
+    @init_contents = File.read(@path).split
     file = File.open(@path)
-    @contents = file.readlines.map(&:chomp)
+    @init_contents = file.readlines.map(&:chomp)
     file.close
   end
 
-  def print_contents
-    p @path
-    p @contents
+  def orininal_file_names
+    []
   end
 
   def populate_tracks
@@ -38,14 +37,22 @@ class GdiSideCarFile < SideCarFile
     populate_tracks
   end
 
+  def original_file_names
+    @tracks.each { |track| puts track.original_track_name }
+  end
+
   def populate_tracks
-    @contents.drop(1).each { |track| @tracks.append(GdiTrack.new(track)) }
+    @init_contents.drop(1).each { |track| @tracks.append(GdiTrack.new(track)) }
   end
 
   def rename_tracks
-    for track in @tracks
-      track.rename_track('track', 'bin')
-    end
+    @tracks.each { |track| track.rename_track('track', 'bin') }
+  end
+
+  def write_tracks
+    @new_contents.append(@init_contents[0])
+    @tracks.each { |track| @new_contents.append(track.new_track_string) }
+    pp @new_contents
   end
 end
 

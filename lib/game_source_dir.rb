@@ -38,8 +38,13 @@ class GameSourceDir
   def gdi_rename
     @sidecar_file_collections['gdi'].each { |gdi_side_car| gdi_side_car.rename_tracks }
   end
-  # def process_gdi_set
-  #   gdi_contents = @sidecar_file_collections['gdi'][0].contents
-  #   puts gdi_contents
-  # end
+
+  def gdi_write
+    @sidecar_file_collections['gdi'].each { |gdi_side_car| gdi_side_car.write_tracks }
+  end
+
+  def gdi_names
+    @sidecar_file_collections['gdi'].each { |gdi_side_car| gdi_side_car.original_file_names }
+  end
+
 end
