@@ -42,10 +42,6 @@ class GdiSideCarFile < SideCarFile
     @contents.drop(1).each { |track| @tracks.append(GdiTrack.new(track)) }
   end
 
-  def display_tracks
-    @populate_tracks
-  end
-
   def rename_tracks
     for track in @tracks
       track.rename_track('track', 'bin')
