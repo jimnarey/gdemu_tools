@@ -37,9 +37,11 @@ class GdiSideCarFile < SideCarFile
     populate_tracks
   end
 
-  def original_file_names
-    @tracks.each { |track| puts track.original_track_name }
-  end
+  # def original_file_names
+  #   original_names = []
+  #   @tracks.each { |track| original_names.append(track.original_track_name) }
+  #   original_names = []
+  # end
 
   def populate_tracks
     @init_contents.drop(1).each { |track| @tracks.append(GdiTrack.new(track)) }
@@ -52,7 +54,7 @@ class GdiSideCarFile < SideCarFile
   def write_tracks
     @new_contents.append(@init_contents[0])
     @tracks.each { |track| @new_contents.append(track.new_track_string) }
-    pp @new_contents
+    # pp @new_contents
   end
 end
 
