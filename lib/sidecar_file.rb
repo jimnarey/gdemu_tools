@@ -11,7 +11,7 @@ class SideCarFile
     @contents = []
     @tracks = []
     populate_contents
-    print_contents
+    # print_contents
   end
 
   def populate_contents
@@ -45,4 +45,14 @@ class GdiSideCarFile < SideCarFile
   def display_tracks
     @populate_tracks
   end
+end
+
+def provide_sidecar(extension, filepath)
+  case extension.downcase
+  when 'gdi'
+    sidecar = GdiSideCarFile.new(filepath)
+  when 'cdi'
+    sidecar = SideCarFile.new(filepath)
+  end
+  sidecar
 end

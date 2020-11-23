@@ -30,7 +30,7 @@ class GameSourceDir
     @sidecar_filepath_collections.each do |extension, filepath_collection|
       @sidecar_file_collections[extension] = []
       filepath_collection.each do |filepath|
-        @sidecar_file_collections[extension].append(GdiSideCarFile.new(filepath)) if extension == 'gdi'
+        @sidecar_file_collections[extension].append(provide_sidecar(extension, filepath))
       end
     end
   end
