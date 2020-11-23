@@ -45,13 +45,19 @@ class GdiSideCarFile < SideCarFile
   def display_tracks
     @populate_tracks
   end
+
+  def rename_tracks
+    for track in @tracks
+      track.rename_track('track')
+    end
+  end
 end
 
 def provide_sidecar(extension, filepath)
   case extension.downcase
   when 'gdi'
     sidecar = GdiSideCarFile.new(filepath)
-  when 'cdi'
+  when 'cue'
     sidecar = SideCarFile.new(filepath)
   end
   sidecar
