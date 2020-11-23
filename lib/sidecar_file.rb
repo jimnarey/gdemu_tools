@@ -48,7 +48,7 @@ class GdiSideCarFile < SideCarFile
 
   def rename_tracks
     for track in @tracks
-      track.rename_track('track')
+      track.rename_track('track', 'bin')
     end
   end
 end
