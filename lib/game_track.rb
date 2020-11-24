@@ -11,6 +11,7 @@ class GdiTrack
     @init_close_quote_index = track_string.index('"', @open_quote_index + 1)
     @original_track_name =
       track_string[@open_quote_index + 1..@init_close_quote_index - 1]
+    # puts '******Original Track Name:'
     # puts @original_track_name
     @track_other = track_string.gsub(@original_track_name, '')
     @new_track_string = ''
